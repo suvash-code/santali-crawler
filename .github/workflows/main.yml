@@ -1,0 +1,26 @@
+name: Daily Crawl
+
+on:
+  schedule:
+    - cron: "0 0 * * *"   # रोज रात 12 बजे (UTC) run होगा
+  workflow_dispatch:      # manually run करने का option भी रहेगा
+
+jobs:
+  run-crawler:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run crawler
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: python app.py
